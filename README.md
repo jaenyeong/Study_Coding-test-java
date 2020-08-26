@@ -74,3 +74,5 @@ https://www.inflearn.com/course/%EC%BD%94%EB%94%A9%ED%85%8C%EC%8A%A4%ED%8A%B8-%E
 ### Graph (DFS & BFS)
 
 #### NumberOfIslandDFS 1, NumberOfIslandBFS 2
+
+#### MaximumDepthOfBinaryTree 3, MaximumDepthOfBinaryTreeDFS 4, MaximumDepthOfBinaryTreeBFS 5
