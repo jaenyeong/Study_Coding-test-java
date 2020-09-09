@@ -1,6 +1,8 @@
 package com.jaenyeong._04_graph._01_numberofisland;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class NumberOfIsland {
     /*
@@ -46,10 +48,10 @@ public class NumberOfIsland {
 
     public static void main(String[] args) {
         char[][] grid = {
-                {'1', '1', '1', '0', '1'},
-                {'1', '1', '0', '0', '0'},
-                {'1', '1', '0', '0', '1'},
-                {'0', '0', '0', '0', '1'}
+            {'1', '1', '1', '0', '1'},
+            {'1', '1', '0', '0', '0'},
+            {'1', '1', '0', '0', '1'},
+            {'0', '0', '0', '0', '1'}
         };
 
         gridRowLength = grid.length;
@@ -73,7 +75,8 @@ public class NumberOfIsland {
 
                     islandCnt++;
 
-                    dfs(grid, row, col);
+//                    dfs(grid, row, col);
+                    bfs(grid, row, col);
 
                     print(grid);
                 }
@@ -91,8 +94,8 @@ public class NumberOfIsland {
     // 일반적으로 DFS는 Stack 사용
     private static void dfs(final char[][] grid, final int row, final int col) {
         if ((0 > row) || (row >= gridRowLength)
-                || (0 > col) || (col >= grid[row].length)
-                || (grid[row][col] != '1')) {
+            || (0 > col) || (col >= grid[row].length)
+            || (grid[row][col] != '1')) {
             return;
         }
 
@@ -102,5 +105,36 @@ public class NumberOfIsland {
         dfs(grid, row + 1, col);
         dfs(grid, row, col - 1);
         dfs(grid, row, col + 1);
+    }
+
+    // BFS에서 사용할 방향 좌표값
+    static final int[][] DIRECTIONS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+    // BFS (Breadth First Search) 너비 우선 탐색
+    // 일반적으로 BFS는 Queue 사용
+    private static void bfs(final char[][] grid, final int row, final int col) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{row, col});
+
+        while (!queue.isEmpty()) {
+            final int size = queue.size();
+            int[] poppedPoint = queue.poll();
+
+            for (int i = 0; i < size; i++) {
+                for (int[] direction : DIRECTIONS) {
+                    int targetRow = poppedPoint[0] + direction[0];
+                    int targetCol = poppedPoint[1] + direction[1];
+
+                    // 진입여부
+                    if ((0 <= targetRow) && (0 <= targetCol)
+                        && (targetRow < gridRowLength)
+                        && (targetCol < grid[row].length)
+                        && (grid[targetRow][targetCol] == '1')) {
+                        grid[targetRow][targetCol] = 'X';
+                        queue.offer(new int[]{targetRow, targetCol});
+                    }
+                }
+            }
+        }
     }
 }
