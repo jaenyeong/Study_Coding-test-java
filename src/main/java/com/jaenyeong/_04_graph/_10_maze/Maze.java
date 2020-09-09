@@ -33,7 +33,7 @@ public class Maze {
 
     static final int[][] DIRECTIONS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     static final int EMPTY_SPACE = 0;
-//	static final int WALL = 1;
+    static final int WALL = 1;
 
     static int mazeRowLength;
     static int mazeColLength;
@@ -59,6 +59,7 @@ public class Maze {
 //        System.out.println(Arrays.toString(destination));
 
         System.out.println(solveBFS(mazeGrid, startingPoint, destination));
+        System.out.println(solveDFS(mazeGrid, startingPoint, destination));
     }
 
     static boolean solveBFS(final int[][] mazeGrid, final int[] startingPoint, final int[] destination) {
@@ -118,5 +119,53 @@ public class Maze {
 
     private static boolean matchStartingPointAndDestination(final int[] startingPoint, final int[] destination) {
         return (startingPoint[0] == destination[0]) && (startingPoint[1] == destination[1]);
+    }
+
+    static boolean solveDFS(final int[][] mazeGrid, final int[] startingPoint, final int[] destination) {
+        if ((mazeGrid == null) && (mazeColLength == 0)
+            && matchStartingPointAndDestination(startingPoint, destination)) {
+            return false;
+        }
+
+        boolean[][] visited = new boolean[mazeRowLength][mazeColLength];
+
+        return dfs(mazeGrid, startingPoint, destination, visited);
+    }
+
+    private static boolean dfs(final int[][] mazeGrid, final int[] startingPoint, final int[] destination, final boolean[][] visited) {
+        if ((0 > startingPoint[0]) || (startingPoint[0] >= mazeRowLength)
+            || (0 > startingPoint[1]) || (startingPoint[1] >= mazeColLength)
+            || visited[startingPoint[0]][startingPoint[1]]) {
+            return false;
+        }
+
+        visited[startingPoint[0]][startingPoint[1]] = true;
+
+        // 목적지 도착 여부 확인
+        if ((startingPoint[0] == destination[0]) && (startingPoint[1] == destination[1])) {
+            return true;
+        }
+
+        for (int[] direction : DIRECTIONS) {
+            int rowPoint = startingPoint[0];
+            int colPoint = startingPoint[1];
+
+            while ((0 <= rowPoint) && (rowPoint < mazeRowLength)
+                && (0 <= colPoint) && (colPoint < mazeColLength)
+                && (mazeGrid[rowPoint][colPoint] != WALL)) {
+
+                rowPoint += direction[0];
+                colPoint += direction[1];
+            }
+
+            rowPoint -= direction[0];
+            colPoint -= direction[1];
+
+            if (dfs(mazeGrid, new int[]{rowPoint, colPoint}, destination, visited)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
